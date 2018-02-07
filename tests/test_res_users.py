@@ -84,6 +84,5 @@ class BaseBlocked(common.SavepointCase):
                                  'company_id': test_company.id,
                                  'company_ids': [(6, 0, test_company.ids)]})
 
-        test_user.write({'company_id': test_company.id})
         returned_warehouse = User.sudo(test_user).get_user_warehouse()
         self.assertEqual(returned_warehouse.id, company_warehouse.id)
