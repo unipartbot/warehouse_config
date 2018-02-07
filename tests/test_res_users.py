@@ -69,20 +69,21 @@ class BaseBlocked(common.SavepointCase):
         self.assertEqual(e.exception.name, 'Found multiple warehouses for user')
 
     def test_04_get_user_warehouse_success(self):
-        """Checks to see that the returned warehouse is correct
-           
-           N.B. This would be better if there was more than one 
-                warehouse but couldn't create a new user in 
-                new company, revisit later.
+        """Checks that the correct warehouse is returned
         """
-        User = self.env['res.users']
+        Company = self.env['res.company']
         Warehouse = self.env['stock.warehouse']
+        User = self.env['res.users']
+        
+        test_company = Company.create({'name': 'test_company'})
+        company_warehouse = Warehouse.search([('company_id', '=', test_company.id)])
 
         # Creating user without company so takes company from current user
         test_user = User.create({'name': 'test_user',
-                                 'login': '12345678910'})
+                                 'login': '12345678910',
+                                 'company_id': test_company.id,
+                                 'company_ids': [(6, 0, test_company.ids)]})
 
+        test_user.write({'company_id': test_company.id})
         returned_warehouse = User.sudo(test_user).get_user_warehouse()
-        user_warehouse = Warehouse.search([('company_id', '=', test_user.company_id.id)])
-
-        self.assertEqual(returned_warehouse.id, user_warehouse.id)
+        self.assertEqual(returned_warehouse.id, company_warehouse.id)
