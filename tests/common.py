@@ -37,11 +37,3 @@ class BaseWarehouseConfig(common.SavepointCase):
         }
         vals.update(kwargs)
         return Company.create(vals)
-
-    @classmethod
-    def do_as_user(cls, user):
-        """Returns User under the context of
-           the supplied user
-        """
-        User = cls.env['res.users']
-        return User.sudo(user)
