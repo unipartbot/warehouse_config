@@ -35,7 +35,7 @@ class TestGetUserWarehouse(BaseWarehouseConfig):
         # Create new warehouse by copying current one and changing
         # the required feilds
         warehouse2 = self.test_warehouse.copy({'name': '123',
-                                      'code': '123'})
+                                               'code': '123'})
         with self.assertRaises(ValidationError) as e:
             User.sudo(self.test_user).get_user_warehouse()
         self.assertEqual(e.exception.name, 'Found multiple warehouses for user')
